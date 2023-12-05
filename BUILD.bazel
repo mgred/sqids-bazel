@@ -1,0 +1,42 @@
+load("@aspect_rules_lint//format:defs.bzl", "multi_formatter_binary")
+load("@aspect_bazel_lib//lib:docs.bzl", "stardoc_with_diff_test")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
+load(":sqids_test.bzl", "sqids_test_suite")
+
+buildifier(
+    name = "buildifier.check",
+    exclude_patterns = [
+        "./.git/*",
+    ],
+    lint_mode = "warn",
+    mode = "check",
+)
+
+multi_formatter_binary(
+    name = "format",
+    starlark = "@buildifier_prebuilt//:buildifier",
+)
+
+bzl_library(
+    name = "sqids",
+    srcs = [
+        "constants.bzl",
+        "sqids.bzl",
+    ],
+    deps = ["@aspect_bazel_lib//lib:strings"],
+)
+
+bzl_library(
+    name = "defs",
+    srcs = ["defs.bzl"],
+    visibility = ["//visibility:public"],
+    deps = [":sqids"],
+)
+
+sqids_test_suite(name = "unittest")
+
+stardoc_with_diff_test(
+    name = "docs",
+    bzl_library_target = ":sqids",
+)
