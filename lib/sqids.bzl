@@ -1,7 +1,7 @@
 "Squids Bazel"
 
 load("@aspect_bazel_lib//lib:strings.bzl", "ord")
-load("//:constants.bzl", "DEFAULT_ALPHABET", "DEFAULT_BLOCKLIST", "DEFAULT_MIN_LENGTH")
+load("//lib:constants.bzl", "DEFAULT_ALPHABET", "DEFAULT_BLOCKLIST", "DEFAULT_MIN_LENGTH")
 
 _FOREVER = range(1073741824)
 
@@ -102,6 +102,51 @@ def _encode_numbers(options, numbers, increment):
 
     return id_
 
+def _sqrt(a, b):
+  if b == 0:
+    return 1
+  ret = a
+  for _ in range(b - 1):
+    ret *= a
+  return ret
+
+def _to_number(alphabet, id_):
+    chars = alphabet.elems()
+    return _sum([chars.index(c) * _sqrt(len(chars), i) for i, c in enumerate(id_[::-1].elems())])
+
+
+def _decode(options, id_):
+        ret = []
+
+        if not id_:
+            return ret
+
+        alphabet_chars = options.alphabet.elems()
+        if any([c not in alphabet_chars for c in id_.elems()]):
+            return ret
+
+        prefix = id_[0]
+        offset = options.alphabet.index(prefix)
+        alphabet = options.alphabet[offset:] + options.alphabet[:offset]
+        alphabet = alphabet[::-1]
+        id_ = id_[1:]
+
+        for _ in _FOREVER:
+          if id_:
+            separator = alphabet[0]
+            chunks = id_.split(separator)
+            if chunks:
+                if not chunks[0]:
+                    return ret
+
+                ret.append(_to_number(alphabet[1:], chunks[0]))
+                if len(chunks) > 1:
+                    alphabet = _shuffle(alphabet)
+            id_ = separator.join(chunks[1:])
+            continue
+          break
+        return ret
+
 def _encode(options, numbers):
     id = ""
     if numbers == None:
@@ -135,7 +180,16 @@ def _check_options(alphabet, min_length):
     if min_length < 0 or min_length > MIN_LENGTH_LIMIT:
         fail("Minimum length has to be between 0 and %s" % MIN_LENGTH_LIMIT)
 
-def sqids(blocklist, alphabet = DEFAULT_ALPHABET, min_length = DEFAULT_MIN_LENGTH):
+def encode(numbers, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
+  _check_options(alphabet, min_length)
+  options = struct(
+      alphabet = _shuffle(alphabet),
+      blocklist = blocklist,
+      min_length = min_length,
+  )
+  return _encode(options, numbers)
+
+def sqids( alphabet = DEFAULT_ALPHABET,blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
     """Generate unique IDs from numbers
 
     Example:
@@ -159,13 +213,17 @@ def sqids(blocklist, alphabet = DEFAULT_ALPHABET, min_length = DEFAULT_MIN_LENGT
 
     options = struct(
         alphabet = _shuffle(alphabet),
-        blocklist = blocklist or DEFAULT_BLOCKLIST,
+        blocklist = blocklist,
         min_length = min_length,
     )
 
-    def __encode(numbers):
+    def encode_wrapper(numbers = None):
         return _encode(options, numbers)
 
+    def decode_wrapper(id = None):
+        return _decode(options, id)
+
     return struct(
-        encode = __encode,
+        encode = encode_wrapper,
+        decode = decode_wrapper,
     )

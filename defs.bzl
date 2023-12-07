@@ -1,5 +1,6 @@
 "Public API"
 
-load(":sqids.bzl", _sqids = "sqids")
+load("//lib:sqids.bzl", _encode = "encode", _sqids = "sqids")
 
+encode = _encode
 sqids = _sqids
