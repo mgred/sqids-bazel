@@ -1,0 +1,3 @@
+load(":encoding.bzl", "encoding_test_suite")
+
+encoding_test_suite(name = "encoding")
