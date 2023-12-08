@@ -96,7 +96,7 @@ def _encode_numbers(options, numbers, increment):
         for _ in _FOREVER:
             if (options.min_length - len(id_)) > 0:
                 alphabet = _shuffle(alphabet)
-                id_ += alphabet[:min(options._min_length - len(id_), len(alphabet))]
+                id_ += alphabet[:min(options.min_length - len(id_), len(alphabet))]
                 continue
             break
 
