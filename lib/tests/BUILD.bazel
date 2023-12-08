@@ -3,5 +3,5 @@ load(":encoding.bzl", "encoding_test_suite")
 load(":min_length.bzl", "min_length_test_suite")
 
 alphabet_test_suite()
-encoding_test_suite(name = "encoding")
+encoding_test_suite()
 min_length_test_suite()

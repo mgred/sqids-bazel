@@ -140,7 +140,7 @@ def _decoding_invalid_character_test_impl(ctx):
 
 decoding_invalid_character_test = unittest.make(_decoding_invalid_character_test_impl)
 
-def encoding_test_suite(name = "sqids_tests"):
+def encoding_test_suite(name = "encoding_test_suite"):
     unittest.suite(
         name,
         decoding_empty_string_test,
