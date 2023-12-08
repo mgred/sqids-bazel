@@ -8,7 +8,7 @@ def _simple_test_impl(ctx):
 
     s = sqids()
     numbers = [1, 2, 3]
-    id =  "86Rf07"
+    id = "86Rf07"
     asserts.equals(env, s.encode(numbers), id)
     asserts.equals(env, s.decode(id), numbers)
 

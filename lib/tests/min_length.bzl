@@ -7,7 +7,7 @@ load("//lib:constants.bzl", "DEFAULT_ALPHABET")
 def _simple_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(min_length=len(DEFAULT_ALPHABET))
+    s = sqids(min_length = len(DEFAULT_ALPHABET))
 
     numbers = [1, 2, 3]
     id = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTM"
@@ -34,36 +34,26 @@ def _incremental_test_impl(ctx):
         13: "86Rf07xd4zBmi",
     }
 
-    map[
-        len(DEFAULT_ALPHABET) + 0
-    ] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTM"
-    map[
-        len(DEFAULT_ALPHABET) + 1
-    ] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTMy"
-    map[
-        len(DEFAULT_ALPHABET) + 2
-    ] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTMyf"
-    map[
-        len(DEFAULT_ALPHABET) + 3
-    ] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTMyf1"
+    map[len(DEFAULT_ALPHABET) + 0] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTM"
+    map[len(DEFAULT_ALPHABET) + 1] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTMy"
+    map[len(DEFAULT_ALPHABET) + 2] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTMyf"
+    map[len(DEFAULT_ALPHABET) + 3] = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTMyf1"
 
     for min_length, id in map.items():
-        s = sqids(min_length=min_length)
+        s = sqids(min_length = min_length)
 
         asserts.equals(env, s.encode(numbers), id)
         asserts.equals(env, len(s.encode(numbers)), min_length)
         asserts.equals(env, s.decode(id), numbers)
 
-
     return unittest.end(env)
 
 incremental_test = unittest.make(_incremental_test_impl)
 
-
 def _incremental_numbers_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(min_length=len(DEFAULT_ALPHABET))
+    s = sqids(min_length = len(DEFAULT_ALPHABET))
 
     ids = {
         "SvIzsqYMyQwI3GWgJAe17URxX8V924Co0DaTZLtFjHriEn5bPhcSkfmvOslpBu": [0, 0],
@@ -82,7 +72,6 @@ def _incremental_numbers_test_impl(ctx):
         asserts.equals(env, s.encode(numbers), id_str)
         asserts.equals(env, s.decode(id_str), numbers)
 
-
     return unittest.end(env)
 
 incremental_numbers_test = unittest.make(_incremental_numbers_test_impl)
@@ -91,19 +80,19 @@ def _min_lengths_test_impl(ctx):
     env = unittest.begin(ctx)
 
     for min_length in [0, 1, 5, 10, len(DEFAULT_ALPHABET)]:
-      for numbers in [
-          [0],
-          [0, 0, 0, 0, 0],
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-          [100, 200, 300],
-          [1000, 2000, 3000],
-          [1000000],
-      ]:
-          s = sqids(min_length=min_length)
+        for numbers in [
+            [0],
+            [0, 0, 0, 0, 0],
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            [100, 200, 300],
+            [1000, 2000, 3000],
+            [1000000],
+        ]:
+            s = sqids(min_length = min_length)
 
-          id_str = s.encode(numbers)
-          asserts.true(env, len(id_str) >= min_length)
-          asserts.equals(env, s.decode(id_str), numbers)
+            id_str = s.encode(numbers)
+            asserts.true(env, len(id_str) >= min_length)
+            asserts.equals(env, s.decode(id_str), numbers)
 
     return unittest.end(env)
 

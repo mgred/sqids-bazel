@@ -103,36 +103,35 @@ def _encode_numbers(options, numbers, increment):
     return id_
 
 def _sqrt(a, b):
-  if b == 0:
-    return 1
-  ret = a
-  for _ in range(b - 1):
-    ret *= a
-  return ret
+    if b == 0:
+        return 1
+    ret = a
+    for _ in range(b - 1):
+        ret *= a
+    return ret
 
 def _to_number(alphabet, id_):
     chars = alphabet.elems()
     return _sum([chars.index(c) * _sqrt(len(chars), i) for i, c in enumerate(id_[::-1].elems())])
 
-
 def _decode(options, id_):
-        ret = []
+    ret = []
 
-        if not id_:
-            return ret
+    if not id_:
+        return ret
 
-        alphabet_chars = options.alphabet.elems()
-        if any([c not in alphabet_chars for c in id_.elems()]):
-            return ret
+    alphabet_chars = options.alphabet.elems()
+    if any([c not in alphabet_chars for c in id_.elems()]):
+        return ret
 
-        prefix = id_[0]
-        offset = options.alphabet.index(prefix)
-        alphabet = options.alphabet[offset:] + options.alphabet[:offset]
-        alphabet = alphabet[::-1]
-        id_ = id_[1:]
+    prefix = id_[0]
+    offset = options.alphabet.index(prefix)
+    alphabet = options.alphabet[offset:] + options.alphabet[:offset]
+    alphabet = alphabet[::-1]
+    id_ = id_[1:]
 
-        for _ in _FOREVER:
-          if id_:
+    for _ in _FOREVER:
+        if id_:
             separator = alphabet[0]
             chunks = id_.split(separator)
             if chunks:
@@ -144,8 +143,8 @@ def _decode(options, id_):
                     alphabet = _shuffle(alphabet)
             id_ = separator.join(chunks[1:])
             continue
-          break
-        return ret
+        break
+    return ret
 
 def _encode(options, numbers):
     id = ""
@@ -181,15 +180,15 @@ def _check_options(alphabet, min_length):
         fail("Minimum length has to be between 0 and %s" % MIN_LENGTH_LIMIT)
 
 def encode(numbers, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
-  _check_options(alphabet, min_length)
-  options = struct(
-      alphabet = _shuffle(alphabet),
-      blocklist = blocklist,
-      min_length = min_length,
-  )
-  return _encode(options, numbers)
+    _check_options(alphabet, min_length)
+    options = struct(
+        alphabet = _shuffle(alphabet),
+        blocklist = blocklist,
+        min_length = min_length,
+    )
+    return _encode(options, numbers)
 
-def sqids( alphabet = DEFAULT_ALPHABET,blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
+def sqids(alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
     """Generate unique IDs from numbers
 
     Example:

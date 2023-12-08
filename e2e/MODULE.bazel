@@ -6,8 +6,7 @@ module(
 
 bazel_dep(name = "bazel_skylib", version = "1.5.0")
 bazel_dep(name = "sqids_bazel", version = "0.0.0")
-
 local_path_override(
-  module_name = "sqids_bazel",
-  path = "..",
+    module_name = "sqids_bazel",
+    path = "..",
 )

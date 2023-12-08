@@ -6,7 +6,7 @@ load("//:defs.bzl", "sqids")
 def _simple_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(alphabet="0123456789abcdef")
+    s = sqids(alphabet = "0123456789abcdef")
 
     numbers = [1, 2, 3]
     id = "489158"
@@ -21,7 +21,7 @@ simple_test = unittest.make(_simple_test_impl)
 def _short_alphabet_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(alphabet="abc")
+    s = sqids(alphabet = "abc")
 
     numbers = [1, 2, 3]
 
@@ -34,7 +34,7 @@ short_alphabet_test = unittest.make(_short_alphabet_test_impl)
 def _long_alphabet_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(alphabet="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+|{}[];:'\"/?.>,<`~")
+    s = sqids(alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_+|{}[];:'\"/?.>,<`~")
 
     numbers = [1, 2, 3]
 
