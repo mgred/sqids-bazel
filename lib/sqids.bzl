@@ -62,6 +62,15 @@ def _is_blocked_id(id_, blocklist):
 
     return False
 
+def _filter_blocklist(blocklist, alphabet):
+    filtered_blocklist = list()
+    alphabet_lower = alphabet.lower()
+    for word_lower in [w.lower() for w in blocklist if len(w) >= 3]:
+        intersection = [c for c in word_lower.elems() if c in alphabet_lower]
+        if len(intersection) == len(word_lower):
+            filtered_blocklist.append(word_lower)
+    return _unique(filtered_blocklist)
+
 def _encode_numbers(options, numbers, increment):
     if increment > len(options.alphabet):
         fail("Reached max attempts to re-generate the ID")
@@ -183,7 +192,7 @@ def encode(numbers, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, 
     _check_options(alphabet, min_length)
     options = struct(
         alphabet = _shuffle(alphabet),
-        blocklist = blocklist,
+        blocklist = _filter_blocklist(blocklist, alphabet),
         min_length = min_length,
     )
     return _encode(options, numbers)
@@ -212,7 +221,7 @@ def sqids(alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length
 
     options = struct(
         alphabet = _shuffle(alphabet),
-        blocklist = blocklist,
+        blocklist = _filter_blocklist(blocklist, alphabet),
         min_length = min_length,
     )
 
