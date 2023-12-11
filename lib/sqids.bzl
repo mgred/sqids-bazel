@@ -189,6 +189,24 @@ def _check_options(alphabet, min_length):
         fail("Minimum length has to be between 0 and %s" % MIN_LENGTH_LIMIT)
 
 def encode(numbers = None, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
+    """encode a list of numbers to an id
+
+    Example:
+      ```starlark
+      load("@sqids_bazel//:defs.bzl", "encode")
+
+      print(encode([1, 2, 3])) // 86Rf07
+      ```
+
+    Args:
+      numbers: list of numbers to encode
+      alphabet: list of characters to generate the ids from
+      blocklist: list of words to avoid in hashes
+      min_length: minimal count of characters
+
+    Returns:
+      A generated id as string
+    """
     _check_options(alphabet, min_length)
     options = struct(
         alphabet = _shuffle(alphabet),
@@ -198,6 +216,22 @@ def encode(numbers = None, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOC
     return _encode(options, numbers)
 
 def decode(id, alphabet = DEFAULT_ALPHABET):
+    """decode a string to a list of numbers
+
+    Example:
+      ```starlark
+      load("@sqids_bazel//:defs.bzl", "decode")
+
+      print(decode("86Rf07")) // [1, 2, 3]
+      ```
+
+    Args:
+      id: list of numbers to encode
+      alphabet: list of characters to generate the ids from
+
+    Returns:
+      A list of numbers
+    """
     _check_options(alphabet, DEFAULT_MIN_LENGTH)
     options = struct(
         alphabet = _shuffle(alphabet),
@@ -212,7 +246,7 @@ def sqids(alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length
       load("@sqids_bazel//:defs.bzl", "sqids")
 
       s = sqids()
-      print(s.encode([1, 2, 3]) // 86Rf07
+      print(s.encode([1, 2, 3])) // 86Rf07
       ```
 
     Args:
