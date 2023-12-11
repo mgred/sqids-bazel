@@ -188,7 +188,7 @@ def _check_options(alphabet, min_length):
     if min_length < 0 or min_length > MIN_LENGTH_LIMIT:
         fail("Minimum length has to be between 0 and %s" % MIN_LENGTH_LIMIT)
 
-def encode(numbers, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
+def encode(numbers = None, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
     _check_options(alphabet, min_length)
     options = struct(
         alphabet = _shuffle(alphabet),
@@ -196,6 +196,13 @@ def encode(numbers, alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, 
         min_length = min_length,
     )
     return _encode(options, numbers)
+
+def decode(id, alphabet = DEFAULT_ALPHABET):
+    _check_options(alphabet, DEFAULT_MIN_LENGTH)
+    options = struct(
+        alphabet = _shuffle(alphabet),
+    )
+    return _decode(options, id)
 
 def sqids(alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
     """Generate unique IDs from numbers
