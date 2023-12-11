@@ -1,7 +1,7 @@
 "Encoding Tests"
 
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
-load("//:defs.bzl", "sqids")
+load("//:defs.bzl", "decode", "encode", "sqids")
 
 def _simple_test_impl(ctx):
     env = unittest.begin(ctx)
@@ -10,7 +10,9 @@ def _simple_test_impl(ctx):
     numbers = [1, 2, 3]
     id = "86Rf07"
     asserts.equals(env, s.encode(numbers), id)
+    asserts.equals(env, encode(numbers), id)
     asserts.equals(env, s.decode(id), numbers)
+    asserts.equals(env, decode(id), numbers)
 
     return unittest.end(env)
 
@@ -22,6 +24,7 @@ def _different_inputs_test_impl(ctx):
     s = sqids()
     numbers = [0, 0, 0, 1, 2, 3, 100, 1000, 100000, 1000000]
     asserts.equals(env, s.decode(s.encode(numbers)), numbers)
+    asserts.equals(env, decode(encode(numbers)), numbers)
 
     return unittest.end(env)
 
@@ -45,7 +48,9 @@ def _incremental_numbers_test_impl(ctx):
     }
     for id_str, numbers in ids.items():
         asserts.equals(env, s.encode(numbers), id_str)
+        asserts.equals(env, encode(numbers), id_str)
         asserts.equals(env, s.decode(id_str), numbers)
+        asserts.equals(env, decode(id_str), numbers)
 
     return unittest.end(env)
 
@@ -69,7 +74,9 @@ def _incremental_numbers_same_index_0_test_impl(ctx):
     }
     for id_str, numbers in ids.items():
         asserts.equals(env, s.encode(numbers), id_str)
+        asserts.equals(env, encode(numbers), id_str)
         asserts.equals(env, s.decode(id_str), numbers)
+        asserts.equals(env, decode(id_str), numbers)
 
     return unittest.end(env)
 
@@ -93,7 +100,9 @@ def _incremental_numbers_same_index_1_test_impl(ctx):
     }
     for id_str, numbers in ids.items():
         asserts.equals(env, s.encode(numbers), id_str)
+        asserts.equals(env, encode(numbers), id_str)
         asserts.equals(env, s.decode(id_str), numbers)
+        asserts.equals(env, decode(id_str), numbers)
 
     return unittest.end(env)
 
@@ -105,6 +114,7 @@ def _multi_input_test_impl(ctx):
     s = sqids()
     numbers = list(range(100))
     asserts.equals(env, numbers, s.decode(s.encode(numbers)))
+    asserts.equals(env, numbers, decode(encode(numbers)))
 
     return unittest.end(env)
 
@@ -115,6 +125,7 @@ def _encoding_no_numbers_test_impl(ctx):
 
     s = sqids()
     asserts.equals(env, s.encode(), "")
+    asserts.equals(env, encode(), "")
 
     return unittest.end(env)
 
@@ -125,6 +136,7 @@ def _decoding_empty_string_test_impl(ctx):
 
     s = sqids()
     asserts.equals(env, s.decode(""), [])
+    asserts.equals(env, decode(""), [])
 
     return unittest.end(env)
 
@@ -135,6 +147,7 @@ def _decoding_invalid_character_test_impl(ctx):
 
     s = sqids()
     asserts.equals(env, s.decode("*"), [])
+    asserts.equals(env, decode("*"), [])
 
     return unittest.end(env)
 

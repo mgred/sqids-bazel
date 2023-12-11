@@ -1,19 +1,22 @@
 "Min Length Tests"
 
 load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
-load("//:defs.bzl", "sqids")
+load("//:defs.bzl", "decode", "encode", "sqids")
 load("//lib:constants.bzl", "DEFAULT_ALPHABET")
 
 def _simple_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(min_length = len(DEFAULT_ALPHABET))
+    min_length = len(DEFAULT_ALPHABET)
+    s = sqids(min_length = min_length)
 
     numbers = [1, 2, 3]
     id = "86Rf07xd4zBmiJXQG6otHEbew02c3PWsUOLZxADhCpKj7aVFv9I8RquYrNlSTM"
 
     asserts.equals(env, s.encode(numbers), id)
+    asserts.equals(env, encode(numbers, min_length = min_length), id)
     asserts.equals(env, s.decode(id), numbers)
+    asserts.equals(env, decode(id), numbers)
 
     return unittest.end(env)
 
@@ -43,8 +46,11 @@ def _incremental_test_impl(ctx):
         s = sqids(min_length = min_length)
 
         asserts.equals(env, s.encode(numbers), id)
+        asserts.equals(env, encode(numbers, min_length = min_length), id)
         asserts.equals(env, len(s.encode(numbers)), min_length)
+        asserts.equals(env, len(encode(numbers, min_length = min_length)), min_length)
         asserts.equals(env, s.decode(id), numbers)
+        asserts.equals(env, decode(id), numbers)
 
     return unittest.end(env)
 
@@ -53,7 +59,8 @@ incremental_test = unittest.make(_incremental_test_impl)
 def _incremental_numbers_test_impl(ctx):
     env = unittest.begin(ctx)
 
-    s = sqids(min_length = len(DEFAULT_ALPHABET))
+    min_length = len(DEFAULT_ALPHABET)
+    s = sqids(min_length = min_length)
 
     ids = {
         "SvIzsqYMyQwI3GWgJAe17URxX8V924Co0DaTZLtFjHriEn5bPhcSkfmvOslpBu": [0, 0],
@@ -70,7 +77,9 @@ def _incremental_numbers_test_impl(ctx):
 
     for id_str, numbers in ids.items():
         asserts.equals(env, s.encode(numbers), id_str)
+        asserts.equals(env, encode(numbers, min_length = min_length), id_str)
         asserts.equals(env, s.decode(id_str), numbers)
+        asserts.equals(env, decode(id_str), numbers)
 
     return unittest.end(env)
 
@@ -93,6 +102,9 @@ def _min_lengths_test_impl(ctx):
             id_str = s.encode(numbers)
             asserts.true(env, len(id_str) >= min_length)
             asserts.equals(env, s.decode(id_str), numbers)
+            id_str = encode(numbers, min_length = min_length)
+            asserts.true(env, len(id_str) >= min_length)
+            asserts.equals(env, decode(id_str), numbers)
 
     return unittest.end(env)
 
