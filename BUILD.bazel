@@ -22,8 +22,3 @@ bzl_library(
     visibility = ["//visibility:public"],
     deps = ["//lib:sqids"],
 )
-#
-# stardoc_with_diff_test(
-#     name = "docs",
-#     bzl_library_target = ":sqids",
-# )
