@@ -1,4 +1,10 @@
-"Squids Bazel"
+"""Sqids Bazel
+
+Generate unique IDs from numbers
+
+This module implements encoding and decoding [sqids](https://sqids.org/).
+The code is heavily adopted from [sqids-python](https://github.com/sqids/sqids-python).
+"""
 
 load("@aspect_bazel_lib//lib:strings.bzl", "ord")
 load("//lib:constants.bzl", "DEFAULT_ALPHABET", "DEFAULT_BLOCKLIST", "DEFAULT_MIN_LENGTH")
@@ -241,6 +247,13 @@ def decode(id, alphabet = DEFAULT_ALPHABET):
 def sqids(alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length = DEFAULT_MIN_LENGTH):
     """Generate unique IDs from numbers
 
+    For convinience, export a function that takes optional arguments alphabet,
+    blocklist and min_length and exports a `struct` that holds `decode` and
+    `encode` methods which only take an id or a list of numbers, respectively.
+
+    This API is similar to the [javascript](https://github.com/sqids/sqids-javascript) or
+    [python](https://github.com/sqids/sqids-python) implementation.
+
     Example:
       ```starlark
       load("@sqids_bazel//:defs.bzl", "sqids")
@@ -255,7 +268,7 @@ def sqids(alphabet = DEFAULT_ALPHABET, blocklist = DEFAULT_BLOCKLIST, min_length
       min_length: minimal count of characters
 
     Returns:
-      a `struct` holding the `encode` and `decode` methods.
+      A `struct` holding the `encode` and `decode` methods.
     """
 
     _check_options(alphabet, min_length)
