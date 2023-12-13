@@ -1,7 +1,8 @@
 "Encoding Tests"
 
-load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
+load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 load("//:defs.bzl", "decode", "encode", "sqids")
+load("//lib/tests:utils.bzl", "hashed_file")
 
 def _simple_test_impl(ctx):
     env = unittest.begin(ctx)
@@ -153,7 +154,25 @@ def _decoding_invalid_character_test_impl(ctx):
 
 decoding_invalid_character_test = unittest.make(_decoding_invalid_character_test_impl)
 
+def _encoding_out_of_range_numbers_test_impl(ctx):
+    env = analysistest.begin(ctx)
+
+    asserts.expect_failure(env, "Encoding supports numbers greater than 0")
+
+    return analysistest.end(env)
+
+encoding_out_of_range_numbers_test = analysistest.make(_encoding_out_of_range_numbers_test_impl, expect_failure = True)
+
 def encoding_test_suite(name = "encoding_test_suite"):
+    encoding_out_of_range_numbers_test(
+        name = "encoding_out_of_range_numbers_test",
+        target_under_test = ":encoding_out_of_range_numbers_test_fake_target",
+    )
+    hashed_file(
+        name = "encoding_out_of_range_numbers_test_fake_target",
+        numbers = [-1],
+        tags = ["manual"],
+    )
     unittest.suite(
         name,
         decoding_empty_string_test,

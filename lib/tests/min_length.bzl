@@ -1,8 +1,9 @@
 "Min Length Tests"
 
-load("@bazel_skylib//lib:unittest.bzl", "asserts", "unittest")
+load("@bazel_skylib//lib:unittest.bzl", "analysistest", "asserts", "unittest")
 load("//:defs.bzl", "decode", "encode", "sqids")
 load("//lib:constants.bzl", "DEFAULT_ALPHABET")
+load("//lib/tests:utils.bzl", "hashed_file")
 
 def _simple_test_impl(ctx):
     env = unittest.begin(ctx)
@@ -110,7 +111,42 @@ def _min_lengths_test_impl(ctx):
 
 min_lengths_test = unittest.make(_min_lengths_test_impl)
 
+def _out_of_range_invalid_min_length_test_impl(ctx):
+    env = analysistest.begin(ctx)
+
+    asserts.expect_failure(env, "Minimum length has to be between 0 and 255")
+
+    return analysistest.end(env)
+
+out_of_range_invalid_min_length_test = analysistest.make(_out_of_range_invalid_min_length_test_impl, expect_failure = True)
+
 def min_length_test_suite(name = "min_length_test_suite"):
+    """Min Length Test Suite
+
+    Args:
+      name: Name of the testsuite
+    """
+
+    out_of_range_invalid_min_length_test(
+        name = "out_of_range_invalid_min_length_test_1",
+        target_under_test = ":out_of_range_invalid_min_length_test_1_fake_target",
+    )
+    hashed_file(
+        name = "out_of_range_invalid_min_length_test_1_fake_target",
+        min_length = -1,
+        numbers = [1, 2, 3],
+        tags = ["manual"],
+    )
+    out_of_range_invalid_min_length_test(
+        name = "out_of_range_invalid_min_length_test_2",
+        target_under_test = ":out_of_range_invalid_min_length_test_2_fake_target",
+    )
+    hashed_file(
+        name = "out_of_range_invalid_min_length_test_2_fake_target",
+        min_length = 256,
+        numbers = [1, 2, 3],
+        tags = ["manual"],
+    )
     unittest.suite(
         name,
         incremental_numbers_test,
