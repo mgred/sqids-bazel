@@ -34,6 +34,7 @@ jobs:
         working-directory: ${{ matrix.folder }}
         run: >
           USE_BAZEL_VERSION="${{ matrix.bazelversion }}"
-          bazel --bazelrc=${{ github.workspace }}/.bazelrc
-                --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc
-                test //...
+          bazel
+          --bazelrc=${{ github.workspace }}/.bazelrc
+          --bazelrc=${{ github.workspace }}/.github/workflows/ci.bazelrc
+          test //...
