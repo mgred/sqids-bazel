@@ -9,7 +9,7 @@ bzl_library(
 )
 
 buildifier(
-    name = "buildifier.format",
+    name = "format",
     exclude_patterns = [
         "./.git/*",
     ],
